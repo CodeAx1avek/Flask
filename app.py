@@ -9,6 +9,7 @@ def start(message):
         message.chat.id,
         "Welcome to the Movie Bot! 🎬\n\n"
         "Type /movie to watch a movie inside Telegram!\n"
+        "Type /terabox to watch a terabox inside Telegram!\n"
         "Type /info to see your user details.\n"
         "Type /about to learn more about us."
     )
@@ -68,6 +69,23 @@ def about(message):
         "Supported by @TNT_HUB_0 and @hackingrecordings"
     )
     bot.send_message(message.chat.id, about_text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['terabox'])
+def terabox(message):
+
+    movie_url = f"https://ashlynnterabox.netlify.app"
+
+    markup = telebot.types.InlineKeyboardMarkup()
+    markup.add(
+        telebot.types.InlineKeyboardButton(
+            "🎬 Open Movie Player", url=movie_url
+        )
+    )
+    bot.reply_to(
+        message,
+        f"Click below to start the movie player with custom size:\n\n🎬 Enjoy your streaming!",
+        reply_markup=markup
+    )
 
 
 # Start polling to check for incoming messages
