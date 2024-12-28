@@ -24,7 +24,7 @@ def home():
 
 
 def run_flask_app():
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=5000)
 
 def keep_alive():
     t = Thread(target=run_flask_app)
@@ -53,14 +53,35 @@ def get_all_users():
 
 # List of keywords for different report categories
 report_keywords = {
-    "HATE": ["devil", "666", "savage", "love", "hate", "followers", "selling", "sold", "seller", "dick", "ban", "banned", "free", "method", "paid"],
-    "SELF": ["suicide", "blood", "death", "dead", "kill myself"],
-    "BULLY": ["@"],
-    "VIOLENT": ["hitler", "osama bin laden", "guns", "soldiers", "masks", "flags"],
-    "ILLEGAL": ["drugs", "cocaine", "plants", "trees", "medicines"],
+    "HATE": ["devil", "666", "savage", "love", "hate", "followers", "selling", "sold", "seller", "dick", "ban", "banned", "free", "method", "paid",
+             "kill", "gand", "murder", "basterd", "motherfucker", "fucker", "chud", "fucked", "fucks", "दुश्मन", "slut", "shit", "shitty", "people", 
+             "enemy", "chut", "chudegi", "chudega", "lund", "choot", "land", "gun", "fire", "firearms", "madarchod", "teri maa ki chut", "baap", 
+             "teri behan ki gand", "behanchod", "bhosda", "chutiya", "hacking", "carding", "jacking", "abuse", "666", "devil", "emperor", "hitler", 
+             "chuda", "bhosdike", "bhosdi ke"],
+    "SELF": ["suicide", "blood", "death", "dead", "kill myself", "suicide", "murder", "harm", "harmful", "hurt", "knife", "attack", "marwa","sword", 
+             "कातिल", "chud", "warn", "बहिनचोद", "गांड", "लंड", "चूत", "भोसड़ा", "मादरचोद", "मादर चोद", "बिच", "चुतीया", "रण्डी", "teri maa chod dunga", 
+             "teri mummy chod dunga", "maa chuda", "gand marwa", "gand mrwa", "gaand", "chudle fer", "chod dunga"],
+    "BULLY": ["@", "bullying", "bully", "me", "you", "harassment", "insult", "दुश्मन", "fuck", "dick", "kill", "chudegi", "jhaatu", "jhaantu", "jhantu", 
+               "chudega", "suicide", "hack", "warn", "warning", "aware", "teri maa chod dunga", "teri mummy chod dunga", "maa chuda", "gand marwa", "gand mrwa", 
+               "gaand", "chudle fer", "chod dunga"],
+    "VIOLENT": ["hitler", "osama bin laden", "guns", "soldiers", "masks", "flags", "kill", "fuck", "dick", "hitler", "war", "fight", "plane", "murder", "attack", 
+                "chudoge", "soja", "aeroplane", "chud", "chudoge", "hijda", "fucker", "fucks", "slut", "slave", "pervert", "hijde", "जंग", "dicky", "manipulate", 
+                "manipulative", "violence", "sex", "slapper", "porn", "nudes", "chuda", "randi", "raand", "rand", "kamini", "kamina", "randibaazi", "chutmari", 
+                "बहिनचोद", "गांड", "लंड", "चूत", "भोसड़ा", "मादरचोद", "मादर चोद", "बिच", "चुतीया", "रण्डी"],
+    "ILLEGAL": ["drugs", "cocaine", "plants", "trees", "medicines", "scam", "qr code", "drugs", "hitler", "gun", "guns", "kill animals", "cow", "dung", 
+                "dog", "dinosaur", "cheetah", "dodo"],
     "PRETENDING": ["verified", "tick"],
-    "NUDITY": ["nude", "sex", "send nudes"],
-    "SPAM": ["phone number"]
+    "NUDITY": ["nude", "sex", "send nudes", "nude", "porn", "sex", "fuck", "dick", "pussy", "sexy", "cleavage", "nangi", "nanga", "naked", "rape", "lust", 
+               "meme", "sticker", "stickers", "private"],
+    "SPAM": ["phone number", "chut", "lund", "teri maa kaa bhosda", "chutiye", "bitch", "tera baap", "teri behan", "chod dunga", "maar dunga", "feel kar apne baap ko"],
+    "SCAM": ["scam", "bully", "fraud", "racist", "money", "paisa", "qr code", "soja", "hijde", "hijda", "chut", "lund", "fuck", "fucks", "fucked", "dick", 
+             "rupees", "rupee", "dhokha", "dagabaj", "dhokhebaj", "dhokhebaaj", "carding", "hacking", "gun", "chuda", "randi", "raand", "rand", "kamini", 
+             "kamina", "randibaazi", "chutmari", "bhosdike", "bhosdi ke", "meme", "sticker", "stickers", "bloody", "private", "बहिनचोद", "गांड", "लंड", 
+             "चूत", "भोसड़ा", "मादरचोद", "मादर चोद", "बिच", "चुतीया", "रण्डी"],
+    "VIOLENCE": ["kill", "fuck", "dick", "hitler", "war", "fight", "plane", "murder", "attack", "chudoge", "soja", "aeroplane", "chud", "chudoge", "hijda", 
+                "fucker", "fucks", "slut", "slave", "pervert", "hijde", "जंग", "dicky", "manipulate", "manipulative", "violence", "sex", "slapper", "porn", 
+                "nudes", "chuda", "randi", "raand", "rand", "kamini", "kamina", "randibaazi", "chutmari", "बहिनचोद", "गांड", "लंड", "चूत", "भोसड़ा", 
+                "मादरचोद", "मादर चोद", "बिच", "चुतीया", "रण्डी"]
 }
 
 def check_keywords(text, keywords):
@@ -126,19 +147,39 @@ def escape_markdown_v2(text):
     pattern = re.compile('|'.join(re.escape(key) for key in replacements.keys()))
     return pattern.sub(lambda x: replacements[x.group(0)], text)
 
+
+@bot.message_handler(commands=['help'])
+def help(message):
+    help_text = (
+        "👨‍💻 *SafeSecureAudit Instagram Profile Scanner Bot*\n\n"
+        "This bot allows you to analyze Instagram profiles for potential security concerns.\n\n"
+        "Commands:\n"
+        "/start - Start the bot and receive a welcome message.\n"
+        "/getban <username> - Scan an Instagram profile and receive a report on potential issues.\n"
+        "Features: support safesecureaudit.com\n"
+        "• Checks Instagram profiles for keywords related to abusive or suspicious content.\n"
+        "• Provides detailed analysis on publicly available information, including biography, follower count, and post details.\n"
+        "• Generates a report based on keyword analysis and profile details.\n\n"
+        "👉 *Usage example*:\n"
+        "/getban username\n"
+        "Just replace 'username' with the Instagram handle you want to check.\n\n"
+        "*Important:* The bot analyzes public Instagram profiles, and its accuracy may vary based on the information available."
+    )
+    bot.reply_to(message, help_text, parse_mode='Markdown')
+
+
 @bot.message_handler(commands=['start'])
 def start(message):
     user_id = message.chat.id
     add_user(user_id)  # Add user to the list
     markup = telebot.types.InlineKeyboardMarkup()
-    markup.add(telebot.types.InlineKeyboardButton("Help", callback_data='help'))
-    bot.reply_to(message, "Welcome! Use /getmeth <username> to analyze an Instagram profile.", reply_markup=markup)
+    bot.reply_to(message, "Welcome! Use /getban <username> to analyze an Instagram profile.<br>Welcome! Use /help to analyze an Instagram profile.", reply_markup=markup)
 
-@bot.message_handler(commands=['getmeth'])
+@bot.message_handler(commands=['getban'])
 def analyze(message):
     username = message.text.split()[1:]  # Get username from command
     if not username:
-        bot.reply_to(message, "😾 Wrong method. Use: /getmeth <username>")
+        bot.reply_to(message, "😾 Wrong method. Use: /getban <username>")
         return
 
     username = ' '.join(username)
@@ -168,6 +209,21 @@ def analyze(message):
         bot.send_message(message.chat.id, result_text, reply_markup=markup, parse_mode='MarkdownV2')
     else:
         bot.reply_to(message, f"❌ Profile {username} not found or an error occurred.")
+
+@bot.message_handler(commands=['movie'])
+def movie(message):
+    markup = telebot.types.InlineKeyboardMarkup()
+    markup.add(
+        telebot.types.InlineKeyboardButton(
+            "🎬 Open Movie Player", url="https://canidiscover.github.io/Movie/"
+        )
+    )
+    bot.reply_to(
+        message,
+        "Click below to start the movie player directly in Telegram:\n\n🎬 Enjoy your streaming!",
+        reply_markup=markup
+    )
+
 
 if __name__ == "__main__":
     def start_bot_polling():
